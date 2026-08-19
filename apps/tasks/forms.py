@@ -10,5 +10,4 @@ class TaskForm(forms.ModelForm):
             "due_date",
             "status",
             "priority",
-            "user",
         ]

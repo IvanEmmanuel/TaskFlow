@@ -6,9 +6,39 @@
     <title>TaskFlow</title>
 </head>
 <body>
-    <h1>Lista de tareas</h1>
+<br>
 
-    <p>Bienvenido a TaskFlow</p>
+    
+    {% if user.is_authenticated %}
+        
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+
+            <button type="submit">
+                Cerrar sesión
+            </button>
+        </form>
+        
+        <br>
+        <br>
+        <a href="{% url 'task_create' %}">Nueva tarea</a>
+
+    {% else %}
+        
+        <a href="{% url 'login' %}"></a>
+
+    {% endif %}
+        
+
+    <h1>Lista de tareas</h1>
+    
+    {% if user.is_authenticated %}
+    
+        <p>Bienvenido a TaskFlow {{ user.username }}</p>
+    
+    {% endif %}
+        
+
 
     {% for task in tasks %}
         <article>

@@ -59,7 +59,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -134,3 +134,9 @@ MAILERS = {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
 }
+
+LOGIN_URL = "/login/"                    # URL a la que se envía al usuario si no está autenticado
+
+LOGIN_REDIRECT_URL = "/tasks/"           # URL a la que se envía después de iniciar sesión correctamente
+
+LOGOUT_REDIRECT_URL = "/login/"          # URL a la que se envía después de cerrar sesión
