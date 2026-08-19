@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TaskFlow{% endblock %}</title>
+</head>
+<body>
+
+    <header>
+        <h1>
+            <a href="{% url 'task_list' %}">
+                TaskFlow
+            </a>
+        </h1>
+        
+        {% if user.is_authenticated %}
+
+            <span>
+                Usuario: {{ user.username }}
+            </span>
+
+            <nav>
+                
+                <a href="{% url 'task_list' %}">
+                    Mis Tareas
+                </a>
+    
+                <a href="{% url 'task_create' %}">
+                    Nueva tarea
+                </a>
+    
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+    
+                    <button type="submit">
+                        Cerrar sesión
+                    </button>
+                </form>
+
+            </nav>
+
+        
+        {% else %}
+
+            <nav>
+                <a href="{% url 'login' %}">
+                    Iniciar Sesión
+                </a>
+            </nav>
+            
+        {% endif %}
+
+        <main>
+
+            {% if messages %}
+                
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+                    
+            {% endif %}
+                
+            
+            {% block content %}
+                
+            {% endblock content %}
+                
+        </main>
+            
+    </header>
+
+    
+</body>
+</html>

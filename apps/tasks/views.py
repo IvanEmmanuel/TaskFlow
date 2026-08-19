@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Task
 from .forms import TaskForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -38,6 +39,12 @@ def task_create(request):
             task = form.save(commit=False) # detiene el guardado a la bd y lo guarda en memoria
             task.user = request.user # asigna el usuario quie creo la tarea
             form.save() # guarda en bd
+            
+            messages.success( # importamos la libreria messages y enviamos un mensage de confirmacion al template
+                request,
+                "Tarea creada correctamente."
+            )
+            
             return redirect("task_list")
     else:
         form = TaskForm()
@@ -57,6 +64,11 @@ def task_edit(request, id):
         
         if form.is_valid():
             form.save()
+            
+            messages.success(
+                request,
+                "Tarea actualizada correctamente.",
+            )
             return redirect("task_detail", id=task.id)
         
     else:
@@ -74,6 +86,11 @@ def task_delete(request, id):
     
     if request.method == "POST":
         task.delete()
+        
+        messages.success(
+            request,
+            "Tarea eliminada correctamente."
+        )
         return redirect("task_list")
     
     return render(

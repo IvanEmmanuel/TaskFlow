@@ -1,23 +1,23 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ task.title }} - TaskFlow</title>
-</head>
-<body>
-    <a href="{% url 'task_list' %}">Volver a las tareas</a>
+{% extends "base.html" %}
 
-    <h1>{{ task.title }}</h1>
+
+{% block title %}
+    Detalle de tarea
+{% endblock title %}
+
+
+{% block content %}
+
+    <h2>{{ task.title }}</h2>
 
     <p>{{ task.description }}</p>
 
+    <p>Fecha límite: {{ task.due_date }}</p>
     <p>Estado: {{ task.get_status_display }}</p>
     <p>Prioridad: {{ task.get_priority_display }}</p>
-    <p>Fecha límite: {{ task.due_date }}</p>
-    <p>Usuario: {{ task.user.username }}</p>
-    <a href="{% url 'task_edit' task.id %}"> Editar Tarea</a>
-    <a href="{% url 'task_delete' task.id %}">Eliminar Tarea</a>
+    <a href="{% url 'task_edit' task.id %}"> Editar</a>
+    <a href="{% url 'task_delete' task.id %}">Eliminar</a>
+
+{% endblock content %}
     
-</body>
-</html>
+
