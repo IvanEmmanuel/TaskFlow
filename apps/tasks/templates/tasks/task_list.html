@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+</head>
+<body>
+    <h1>Lista de tareas</h1>
+
+    <p>Bienvenido a TaskFlow</p>
+
+    {% for task in tasks %}
+        <article>
+            <h2>
+                <a href="{% url 'task_detail' task.id %}">{{ task.title }}</a>
+            </h2>
+            <p>{{ task.description }}</p>
+            <p>Estado: {{ task.get_status_display }}</p>
+            <p>Prioridad: {{ task.get_priority_display }}</p>
+            <p>Fecha limite: {{ task.due_date }}</p>
+        </article>
+    {% empty %}
+        <p>No hay tareas registradas.</p>
+    {% endfor %}
+        
+    
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar tarea - TaskFlow</title>
+</head>
+<body>
+
+    <h1>Eliminar Tarea</h1>
+
+    <p>
+        Estás seguro de que quieres Eliminar
+        <strong>{{ task.title }}</strong>
+    </p>
+    <form method="POST">
+        {% csrf_token %}
+
+        <button type="submit">
+            Si, eliminar
+        </button>
+    </form>
+    <a href="{% url 'task_detail' task.id %}">
+        Cancelar
+    </a>
+    
+</body>
+</html>
