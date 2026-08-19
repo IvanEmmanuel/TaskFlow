@@ -23,3 +23,6 @@ class Task(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     priority = models.CharField(max_length=7, choices=PRIORITY_CHOICES)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    
+    def __str__(self):
+        return self.title
