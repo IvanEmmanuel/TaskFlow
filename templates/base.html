@@ -9,7 +9,7 @@
 
     <header>
         <h1>
-            <a href="{% url 'task_list' %}">
+            <a href="{% url 'tasks:task_list' %}">
                 TaskFlow
             </a>
         </h1>
@@ -22,11 +22,11 @@
 
             <nav>
                 
-                <a href="{% url 'task_list' %}">
+                <a href="{% url 'tasks:task_list' %}">
                     Mis Tareas
                 </a>
     
-                <a href="{% url 'task_create' %}">
+                <a href="{% url 'tasks:task_create' %}">
                     Nueva tarea
                 </a>
     

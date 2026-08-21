@@ -15,8 +15,8 @@
     <p>Fecha límite: {{ task.due_date }}</p>
     <p>Estado: {{ task.get_status_display }}</p>
     <p>Prioridad: {{ task.get_priority_display }}</p>
-    <a href="{% url 'task_edit' task.id %}"> Editar</a>
-    <a href="{% url 'task_delete' task.id %}">Eliminar</a>
+    <a href="{% url 'tasks:task_edit' task.id %}"> Editar</a>
+    <a href="{% url 'tasks:task_delete' task.id %}">Eliminar</a>
 
 {% endblock content %}
     

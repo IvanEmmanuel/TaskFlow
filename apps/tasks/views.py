@@ -40,7 +40,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):   # LoginRequiredMixin exi
     model = Task                                        # Indica que esta vista trabajará con el modelo Task.
     form_class = TaskForm                               # Indica que CreateView utilizará nuestro TaskForm para crear y validar la tarea.
     template_name = "tasks/task_form.html"              # Indica el template que se utilizará para mostrar el formulario.
-    success_url = reverse_lazy("task_list")             # Indica a qué URL se redirigirá al usuario después de crear correctamente la tarea.
+    success_url = reverse_lazy("tasks:task_list")             # Indica a qué URL se redirigirá al usuario después de crear correctamente la tarea.
 
     def form_valid(self, form):                         # Se ejecuta automáticamente cuando el formulario pasó todas las validaciones.
         task = form.save(commit=False)                  # Crea el objeto Task en memoria, pero todavía no lo guarda en la base de datos.
@@ -60,7 +60,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):   # Exige que el usuario e
     form_class = TaskForm                               # Indica que utilizaremos nuestro TaskForm para editar la tarea.
     template_name = "tasks/task_form.html"              # Indica el template que mostrará el formulario de edición.
     context_object_name = "task"                        # Define el nombre con el que la tarea estará disponible dentro del template.
-    success_url = reverse_lazy("task_list")             # Indica a dónde se redirigirá después de actualizar correctamente.
+    success_url = reverse_lazy("tasks:task_list")             # Indica a dónde se redirigirá después de actualizar correctamente.
     pk_url_kwarg = "id"                                 # Indica que el identificador de la tarea viene en la URL con el nombre id.
     
     def get_queryset(self):                             # Define qué tareas puede encontrar y editar esta vista.
@@ -79,7 +79,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):   # Exige que el usuario e
 class TaskDeleteView(LoginRequiredMixin, DeleteView):   # Exige que el usuario esté autenticado para acceder a esta vista.
     model = Task                                        # Indica que la vista trabajará con el modelo Task.
     template_name = "tasks/task_confirm_delete.html"    # Indica el template que mostrará la confirmación antes de eliminar.
-    success_url = reverse_lazy("task_list")             # Indica a dónde se redirigirá después de eliminar correctamente.
+    success_url = reverse_lazy("tasks:task_list")             # Indica a dónde se redirigirá después de eliminar correctamente.
     pk_url_kwarg = "id"                                 # Indica que el identificador de la tarea viene en la URL con el nombre id.
     
     def get_queryset(self):                             # Define qué tareas puede encontrar y eliminar esta vista.
@@ -152,7 +152,7 @@ def task_create(request):
                 "Tarea creada correctamente."
             )
             
-            return redirect("task_list")
+            return redirect("tasks:task_list")
     else:
         form = TaskForm()
         
@@ -176,7 +176,7 @@ def task_edit(request, id):
                 request,
                 "Tarea actualizada correctamente.",
             )
-            return redirect("task_detail", id=task.id)
+            return redirect("tasks:task_detail", id=task.id)
         
     else:
         form = TaskForm(instance=task)
@@ -198,7 +198,7 @@ def task_delete(request, id):
             request,
             "Tarea eliminada correctamente."
         )
-        return redirect("task_list")
+        return redirect("tasks:task_list")
     
     return render(
         request,
