@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tasks/css/task_form.css' %}">
+{% endblock extra_css %}
 
 {% block title %}
     Formulario de tarea
@@ -8,9 +13,11 @@
 
 {% block content %}
     
-    <h1>Crear / Editar Tarea</h1>
+    <h1 class="task-form-title">
+        Crear / Editar Tarea
+    </h1>
 
-    <form method="POST">
+    <form method="POST" class="task-form">
         {% csrf_token %}
 
         {{ form.non_field_errors }}

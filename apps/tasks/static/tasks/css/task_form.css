@@ -1,0 +1,101 @@
+/* =========================================================
+   FORMULARIO DE TAREA
+   ========================================================= */
+
+/* Contenedor principal del formulario. */
+.task-form {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+/* Título del formulario. */
+.task-form-title {
+    max-width: 700px;
+    margin: 0 auto 25px auto;
+    color: #f5f5f5;
+    font-size: 28px;
+}
+
+/* =========================================================
+   CAMPOS DEL FORMULARIO
+   ========================================================= */
+
+/* Separamos visualmente cada campo del formulario. */
+.task-form p {
+    margin: 0 0 18px 0;
+}
+
+/* Estilos para las etiquetas de cada campo. */
+.task-form label {
+    display: block;
+    margin-bottom: 6px;
+    color: #d0d0d0;
+    font-weight: 600;
+}
+
+/* Estilos para inputs, selects y áreas de texto. */
+.task-form input,
+.task-form select,
+.task-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    border: 1px solid #555555;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+/* Resaltamos el campo que está recibiendo la entrada del usuario. */
+.task-form input:focus,
+.task-form select:focus,
+.task-form textarea:focus {
+    outline: none;
+    border-color: #8B5CF6;
+}
+
+/* Ajustamos el tamaño mínimo del campo de descripción. */
+.task-form textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+/* =========================================================
+   ERRORES DE VALIDACIÓN
+   ========================================================= */
+
+/* Estilo para los errores generales del formulario. */
+.task-form .errorlist {
+    margin: 6px 0 0 0;
+    padding: 0;
+    list-style: none;
+    color: #fd3243;
+    font-size: 14px;
+}
+
+/* =========================================================
+   BOTÓN GUARDAR
+   ========================================================= */
+
+/* Estilos para el botón principal del formulario. */
+.task-form button[type="submit"] {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 9px 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: #8B5CF6;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+/* Cambiamos el color del botón al pasar el cursor. */
+.task-form button[type="submit"]:hover {
+    background-color: #A78BFA;
+}

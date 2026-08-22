@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tasks/css/task_delete.css' %}">
+{% endblock extra_css %}
 
 {% block title %}
     Eliminar Tarea
@@ -8,22 +13,37 @@
 
 {% block content %}
     
-    <h1>Eliminar Tarea</h1>
+    <div class="task-delete">
 
-    <p>
-        Estás seguro de que quieres Eliminar
-        <strong>{{ task.title }}</strong>
-    </p>
-    <form method="POST">
-        {% csrf_token %}
+        <!-- Título de la pantalla de confirmación. -->
+        <h1>Eliminar Tarea</h1>
 
-        <button type="submit">
-            Si, eliminar
-        </button>
-    </form>
-    <a href="{% url 'tasks:task_detail' task.id %}">
-        Cancelar
-    </a>
+
+        <p class="task-delete-message">
+
+            <!-- Mostramos el nombre de la tarea que el usuario está a punto de eliminar. -->
+            ¿Estás seguro de que quieres eliminar
+            <strong>{{ task.title }}</strong>?
+
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <button type="submit">
+                Sí, eliminar
+            </button>
+
+        </form>
+
+
+        <a href="{% url 'tasks:task_detail' task.id %}">
+            Cancelar
+        </a>
+
+    </div>
 
 {% endblock content %}
 

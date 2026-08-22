@@ -1,0 +1,78 @@
+/* =========================================================
+   CONFIRMACIÓN DE ELIMINACIÓN
+   ========================================================= */
+
+/* Contenedor principal de la confirmación. */
+.task-delete {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid #444444;
+    border-radius: 10px;
+    background-color: #252525;
+}
+
+/* Título de la confirmación. */
+.task-delete h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #f5f5f5;
+}
+
+/* Mensaje que solicita la confirmación del usuario. */
+.task-delete-message {
+    margin-bottom: 25px;
+    color: #d0d0d0;
+    line-height: 1.5;
+}
+
+/* Destacamos el nombre de la tarea. */
+.task-delete-message strong {
+    color: #f5f5f5;
+}
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
+/* Organizamos las acciones de confirmación. */
+.task-delete form {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+/* Estilo base del botón de eliminar. */
+.task-delete button {
+    padding: 9px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #fd3243;
+    color: #f7f7f7;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Cambiamos ligeramente el color al pasar el cursor sobre eliminar. */
+.task-delete button:hover {
+    background-color: #ff6b77;
+}
+
+/* Estilo para el enlace de cancelar. */
+.task-delete > a {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 6px;
+    background-color: #444444;
+    color: #f5f5f5;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Cambiamos el aspecto de cancelar al pasar el cursor. */
+.task-delete > a:hover {
+    background-color: #555555;
+}

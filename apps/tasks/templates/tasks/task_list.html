@@ -8,24 +8,28 @@
 
 {% block content %}
 
-    <h2>Mis Tareas</h2>
-    
-    {% if object_list|length == 0 %}
-        <!-- object_list es proporcionado automáticamente por Django ListView y contiene el resultado de get_queryset(). -->
-        <!-- |length obtiene la cantidad de elementos que contiene object_list. -->
-        <p>No se encontraron tareas.</p>
+    <div class="task-list-header">
 
-    {% elif object_list|length == 1 %}
-        <!-- Comprobamos si object_list contiene exactamente una tarea. -->
-        <p>1 tarea encontrada.</p>
+        <h2>Mis Tareas</h2>
+        
+        {% if object_list|length == 0 %}
+            <!-- object_list es proporcionado automáticamente por Django ListView y contiene el resultado de get_queryset(). -->
+            <!-- |length obtiene la cantidad de elementos que contiene object_list. -->
+            <p>No se encontraron tareas.</p>
 
-    {% else %}
-        <!-- Si hay más de una tarea, mostramos la cantidad de elementos que contiene object_list. -->
-        <p>{{ object_list|length }} tareas encontradas.</p>
+        {% elif object_list|length == 1 %}
+            <!-- Comprobamos si object_list contiene exactamente una tarea. -->
+            <p>1 tarea encontrada.</p>
 
-    {% endif %}
+        {% else %}
+            <!-- Si hay más de una tarea, mostramos la cantidad de elementos que contiene object_list. -->
+            <p>{{ object_list|length }} tareas encontradas.</p>
 
-    <form method="get">
+        {% endif %}
+
+    </div>
+
+    <form method="get" class="task-filters">
         <input type="text" name="search" placeholder="Buscar una tarea..." value="{{ request.GET.search }}"> 
         <!-- Django volverá a colocar en el input lo que viene en: ?search=django -->
         <!-- Por lo tanto:  {{ request.GET.search }} será: django -->
@@ -38,7 +42,7 @@
         </select>
 
         <select name="priority">
-            <option value="">Todas las priorídades</option>
+            <option value="">Todas las prioridades</option>
             <option value="LOW" {% if request.GET.priority == "LOW" %} selected {% endif %} >Baja</option>
             <option value="MEDIUM" {% if request.GET.priority == "MEDIUM" %} selected {% endif %}>Media</option>
             <option value="HIGH" {% if request.GET.priority == "HIGH" %} selected {% endif %}>Alta</option>
@@ -47,7 +51,7 @@
         <select name="order">
             <option value="">Ordenar por</option>
             <option value="due_asc" {% if request.GET.order == "due_asc" %} selected {% endif %}>Fecha límite más próxima</option>
-            <option value="due_desc" {% if request.Get.order == "due_desc" %} selected {% endif %}>Fecha límite más lejana</option>
+            <option value="due_desc" {% if request.GET.order == "due_desc" %} selected {% endif %}>Fecha límite más lejana</option>
             <option value="newest" {% if request.GET.order == "newest" %} selected {% endif %}>Más recientes</option>
             <option value="oldest" {% if request.GET.order == "oldest" %} selected {% endif %}>Más antiguas</option>
         </select>
@@ -71,22 +75,48 @@
                 </a>
             </h3>
 
-            <p>
-                {{ task.description }}
+            <p class="task-status status-{{ task.status|lower }}">
+                <!-- get_status_display() es un método generado automáticamente por Django porque el campo status utiliza choices. Devuelve la etiqueta legible del estado. -->
+                Estado: {{ task.get_status_display }}
             </p>
 
-            <p>
-                {{ task.get_status_diisplay }}
+            <p class="task-priority priority-{{ task.priority|lower }}">
+                <!-- get_priority_display() es un método generado automáticamente por Django porque el campo priority utiliza choices. Devuelve la etiqueta legible de la prioridad. -->
+                Prioridad: {{ task.get_priority_display }}
             </p>
 
-            <p>
-                {{ task.get_priority_display }}
+            <p class="task-due-date">
+                Fecha límite: {{ task.due_date }}
             </p>
+
+            {% if task.is_overdue %}
+                <!-- is_overdue es una propiedad del modelo(revisar modelo) que indica si la tarea está vencida y todavía no está completada. -->
+                <p class="task-overdue">
+                    ⚠ Tarea vencida.
+                </p>
+                
+            {% endif %}
+                
+
         </article>
 
     {% empty %}
 
-        <p>No tienes tareas registradas.</p>
+        <div class="empty-state">
+
+            <h3>
+                No tienes tareas
+            </h3>
+
+            <p>
+                No hay tareas que mostrar en este momento.
+            </p>
+
+            <a href="{% url 'tasks:task_create' %}">
+                + Nueva tarea
+            </a>
+
+        </div>
 
     {% endfor %}
 
@@ -103,7 +133,7 @@
                 └── next_page_number()
     -->
 
-        <div>
+        <div class="pagination">
             
             {% if page_obj.has_previous %}           <!-- page_obj representa la página actual y has_previous indica si existe una página anterior. -->
 

@@ -1,38 +1,45 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'tasks/css/style.css' %}">
+    {% block extra_css %} <!-- Esto es para que cargue el css en cada plantilla, por ejemplo taskdetail.css -->
+    {% endblock extra_css %}
+
     <title>{% block title %}TaskFlow{% endblock %}</title>
 </head>
 <body>
 
     <header>
+
         <h1>
             <a href="{% url 'tasks:task_list' %}">
                 TaskFlow
             </a>
         </h1>
-        
+
         {% if user.is_authenticated %}
 
-            <span>
-                Usuario: {{ user.username }}
+            <span class="user-info">
+                👤 {{ user.username }}
             </span>
 
             <nav>
-                
+
                 <a href="{% url 'tasks:task_list' %}">
                     Mis Tareas
                 </a>
-    
+
                 <a href="{% url 'tasks:task_create' %}">
                     Nueva tarea
                 </a>
-    
+
                 <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
-    
+
                     <button type="submit">
                         Cerrar sesión
                     </button>
@@ -40,7 +47,6 @@
 
             </nav>
 
-        
         {% else %}
 
             <nav>
@@ -48,30 +54,33 @@
                     Iniciar Sesión
                 </a>
             </nav>
-            
+
         {% endif %}
 
-        <main>
+    </header>
 
-            {% if messages %}
-                
+
+    <main>
+
+        {% if messages %}
+
+            <div class="messages">
+
                 {% for message in messages %}
                     <p class="{{ message.tags }}">
                         {{ message }}
                     </p>
                 {% endfor %}
-                    
-            {% endif %}
-                
-            
-            {% block content %}
-                
-            {% endblock content %}
-                
-        </main>
-            
-    </header>
 
-    
+            </div>
+
+        {% endif %}
+
+        {% block content %}
+
+        {% endblock content %}
+
+    </main>
+
 </body>
 </html>
