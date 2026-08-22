@@ -15,6 +15,8 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
     model = Task                                    # Esta vista trabaja con el modelo Task.
     template_name = "tasks/task_list.html"          # Le indicamos qué template debe renderizar.
     context_object_name = "tasks"                   # Proporciona un nombre basado en el modelo
+    paginate_by = 5                                 # Mostrar máximo 5 tareas por página.
+    
     VALID_STATUSES = {
         "PENDING",
         "IN_PROGRESS",

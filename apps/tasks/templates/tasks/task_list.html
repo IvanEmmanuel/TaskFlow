@@ -89,7 +89,62 @@
         <p>No tienes tareas registradas.</p>
 
     {% endfor %}
+
     
+    {% if is_paginated %}       <!-- is_paginated es proporcionado automáticamente por ListView e indica si existen varias páginas. -->
+
+    <!--    Django nos está proporcionando varios objetos automáticamente con:
+            page_obj
+                │
+                ├── number
+                ├── has_previous
+                ├── previous_page_number()
+                ├── has_next
+                └── next_page_number()
+    -->
+
+        <div>
+            
+            {% if page_obj.has_previous %}           <!-- page_obj representa la página actual y has_previous indica si existe una página anterior. -->
+
+                <!-- request.GET contiene los parámetros actuales de la URL y urlencode() los convierte nuevamente en formato de consulta para reutilizarlos en otro enlace. -->
+                <a href="?{{ request.GET.urlencode }}&page={{ page_obj.previous_page_number }}">
+                    Anterior
+                </a>
+                
+            {% endif %}
+
+            <!-- page_range contiene automáticamente los números de todas las páginas disponibles. -->
+            {% for num in page_obj.paginator.page_range %}
+                
+                {% if num == page_obj.number %}             <!-- page_obj.number indica el número de la página actual. -->
+                    
+                    <strong>
+                        {{ num }}
+                    </strong>
+
+                {% else %}
+                    <!-- Conservamos los parámetros GET actuales y solamente cambiamos el número de página. -->
+                    <a href="?{{ request.GET.urlencode }}&page={{ num }}">{{ num }}</a>
+                    
+                {% endif %}
+                    
+                
+            {% endfor %}
+                
+
+            {% if page_obj.has_next %}              <!-- has_next indica si existe una página posterior. -->
+
+                <!-- request.GET contiene los parámetros actuales de la URL y urlencode() los convierte nuevamente en formato de consulta para reutilizarlos en otro enlace. -->
+                <a href="?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">
+                    Siguiente
+                </a>
+                
+            {% endif %}
+                
+        </div>
+
+    {% endif %}
+
+
 {% endblock content %}
-    
-    
