@@ -10,14 +10,60 @@
 
     <h2>{{ task.title }}</h2>
 
-    <p>{{ task.description }}</p>
+    <p>{{ task.description|linebreaks }}</p>  <!-- linebreaks convierte los saltos de línea del texto en formato HTML para conservar la estructura de la descripción. -->
 
     <p>Fecha límite: {{ task.due_date }}</p>
+    {% if task.is_overdue %}
+    
+        <!-- is_overdue es una propiedad que definimos en el modelo(revisar modelo) que indica si la tarea venció y todavía no está completada. -->
+        <p>Esta tarea está vencida.</p>
+        
+    {% endif %}
+        
+
+
     <p>Estado: {{ task.get_status_display }}</p>
+    {% if task.status == "PENDING" %}
+
+        <!-- Comprobamos si el estado interno de la tarea es PENDING. -->
+        <p>Esta tarea está pendinete.</p>
+
+    {% elif task.status == "IN_PROGRESS" %}
+
+        <!-- Comprobamos si el estado interno de la tarea es IN_PROGRESS. -->
+        <p>Esta tarea está en progreso.</p>
+
+    {% elif task.status == "COMPLETED" %}
+
+        <!-- Comprobamos si el estado interno de la tarea es COMPLETED. -->
+        <p>Esta tarea está completeda.</p>
+
+    {% endif %}
+        
+
+
     <p>Prioridad: {{ task.get_priority_display }}</p>
+    {% if task.priority == "HIGH" %}
+
+        <!-- Comprobamos si la prioridad interna de la tarea es HIGH. -->
+        <p>Prioridad alta: esta tarea requiiere atención.</p>
+
+    {% elif task.priority == "MEDIUM" %}
+
+        <!-- Comprobamos si la prioridad interna de la tarea es MEDIUM. -->
+        <p>Prioridad media.</p>
+
+    {% elif task.priority == "LOW" %}
+
+        <!-- Comprobamos si la prioridad interna de la tarea es LOW. -->
+        <p>Prioridad baja.</p>
+        
+    {% endif %}
+        
+
+    <p>Creada: {{ task.created_at }}</p>
+    <p>Última actualización: {{ task.updated_at }}</p>
     <a href="{% url 'tasks:task_edit' task.id %}"> Editar</a>
     <a href="{% url 'tasks:task_delete' task.id %}">Eliminar</a>
 
 {% endblock content %}
-    
-

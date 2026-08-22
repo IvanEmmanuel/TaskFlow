@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone          # Obtiene la fecha actual para comparar si la tarea ya venció.
 # Create your models here.
 
 STATUS_CHOICES = [
@@ -23,6 +24,12 @@ class Task(models.Model):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     priority = models.CharField(max_length=7, choices=PRIORITY_CHOICES)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    
+    
+    @property  # nos permite acceder a un método del modelo como si fuera un atributo:    {{ task.is_overdue }}   en lugar de:   {{ task.is_overdue() }}
+    def is_overdue(self): 
+        
+        return self.due_date < timezone.localdate() and self.status != "COMPLETED"      # Una tarea está vencida cuando su fecha límite ya pasó y todavía no está completada.
     
     def __str__(self):
         return self.title
