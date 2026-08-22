@@ -10,17 +10,88 @@ from django.urls import reverse_lazy
 
 # Create your views here.
 
-class TaskListView(LoginRequiredMixin, ListView): # heredamos de las c lases padres LoginRequiredMixin, ListView
-                                                  # LoginRequiredMixin hace lo que anteriormente hacíamos con: @login_required
-    model = Task                                  # Esta vista trabaja con el modelo Task.
-    template_name = "tasks/task_list.html"        # Le indicamos qué template debe renderizar.
-    context_object_name = "tasks"                 # Proporciona un nombre basado en el modelo
+class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases padres LoginRequiredMixin, ListView
+                                                    # LoginRequiredMixin hace lo que anteriormente hacíamos con: @login_required
+    model = Task                                    # Esta vista trabaja con el modelo Task.
+    template_name = "tasks/task_list.html"          # Le indicamos qué template debe renderizar.
+    context_object_name = "tasks"                   # Proporciona un nombre basado en el modelo
+    VALID_STATUSES = {
+        "PENDING",
+        "IN_PROGRESS",
+        "COMPLETED",
+    }
+
+    VALID_PRIORITIES = {
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+    }
+
+    VALID_ORDERS = {
+        "due_asc",
+        "due_desc",
+        "newest",
+        "oldest",
+    }
     
     def get_queryset(self):
-        return Task.objects.filter(               # Aquí estamos conservando nuestra regla de autorización, solo trae los registros del usuario autenticado.
+
+        # Primero obtenemos únicamente las tareas del usuario autenticado y se las asignamos a queryset.
+        queryset = Task.objects.filter(
             user=self.request.user
         )
 
+        # Aquí estamos conservando nuestra regla de autorización, solo trae los registros del usuario autenticado.
+
+        return self.apply_filters(queryset)  # Enviamos el QuerySet(queryset) a apply_filters() para aplicar los filtros y devolver el resultado final.
+
+
+    def apply_filters(self, queryset):                  # Aquí recibimos: queryset, que ya contiene únicamente las tareas del usuario autenticado.
+
+        # Filtrado por búsqueda por título.
+        search = self.request.GET.get("search")         # Obtenemos el texto que el usuario escribió en el parámetro search o buscador.
+
+        if search:                                      # Comprobamos si realmente se proporcionó un texto de búsqueda, es decir, que no venga vacío.
+            queryset = queryset.filter(
+                title__icontains=search                 # Filtramos el QuerySet para conservar títulos que contengan el texto, ignorando mayúsculas y minúsculas.
+            )
+
+        # Filtrado por estado.
+        status = self.request.GET.get("status")         # Obtenemos el estado que el usuario seleccionó desde el formulario.
+
+        if status in self.VALID_STATUSES:               # Comprobamos si el usuario realmente seleccionó un estado.
+            queryset = queryset.filter(
+                status=status                           # Filtramos el QuerySet comparando el estado de la tarea con el valor enviado por el usuario.
+            )
+
+        # Filtrado por prioridad.
+        priority = self.request.GET.get("priority")     # Obtenemos la prioridad que el usuario seleccionó desde el formulario.
+
+        if priority in self.VALID_PRIORITIES:           # Comprobamos si el usuario realmente seleccionó una prioridad.
+            queryset = queryset.filter(
+                priority=priority                       # Filtramos el QuerySet comparando la prioridad de la tarea con el valor enviado por el usuario.
+            )
+
+        # Ordenamiento de las tareas.
+        order = self.request.GET.get("order")           # Obtenemos el tipo de ordenamiento que el usuario seleccionó.
+
+        if order in self.VALID_ORDERS:                      # Obtenemos el tipo de ordenamiento que el usuario seleccionó.
+        
+            if order == "due_asc":                          # Comprobamos si el usuario quiere ordenar por fecha límite ascendente.
+                queryset = queryset.order_by("due_date")    # Ordenamos las tareas de la fecha límite más próxima a la más lejana.
+
+            elif order == "due_desc":                       # Comprobamos si el usuario quiere ordenar por fecha límite descendente.
+                queryset = queryset.order_by("-due_date")   # Ordenamos las tareas de la fecha límite más lejana a la más próxima.
+
+            elif order == "newest":                         # Comprobamos si el usuario quiere ver primero las tareas más recientes.
+                queryset = queryset.order_by("-created_at") # El signo "-" indica orden descendente, por lo que las más recientes aparecen primero.
+
+            elif order == "oldest":                         # Comprobamos si el usuario quiere ver primero las tareas más antiguas.
+                queryset = queryset.order_by("created_at")  # Ordenamos las tareas desde la más antigua hasta la más reciente.
+
+
+        return queryset                                 # Devolvemos el QuerySet final después de aplicar los filtros y el ordenamiento.
+ 
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
     
