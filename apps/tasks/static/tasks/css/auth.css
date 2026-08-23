@@ -1,0 +1,201 @@
+/* =========================================================
+   AUTENTICACIÓN
+   ========================================================= */
+
+/* Centramos el contenido de las pantallas de autenticación. */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* Creamos la tarjeta principal de autenticación. */
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 30px;
+    box-sizing: border-box;
+    border: 1px solid #444444;
+    border-radius: 12px;
+    background-color: #252525;
+}
+
+/* Título principal de la pantalla. */
+.auth-card h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #f5f5f5;
+    text-align: center;
+}
+
+/* =========================================================
+   CAMPOS DEL FORMULARIO
+   ========================================================= */
+
+/* Cada grupo generado por form.as_p. */
+.auth-card form p {
+    margin: 0 0 18px 0;
+}
+
+/* Etiquetas de los campos. */
+.auth-card form label {
+    display: block;
+    margin-bottom: 6px;
+    color: #c7c7c7;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.auth-card form input[type="text"],
+.auth-card form input[type="email"],
+.auth-card form input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    border: 1px solid #555555;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    font-size: 14px;
+}
+
+/* Cambiamos el borde cuando el campo recibe el foco. */
+.auth-card form input:focus {
+    outline: none;
+    border-color: #8B5CF6;
+}
+
+/* =========================================================
+   BOTÓN
+   ========================================================= */
+
+/* Botón principal del formulario. */
+.auth-card form button {
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #8B5CF6;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Efecto visual del botón al pasar el cursor. */
+.auth-card form button:hover {
+    background-color: #A78BFA;
+}
+
+/* =========================================================
+   ENLACES
+   ========================================================= */
+
+/* Contenedor de los enlaces secundarios. */
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Espaciado de cada enlace. */
+.auth-links p {
+    margin: 8px 0;
+}
+
+/* Estilo general de los enlaces de autenticación. */
+.auth-links a {
+    color: #A78BFA;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Efecto visual al pasar el cursor sobre los enlaces. */
+.auth-links a:hover {
+    color: #DCB0F2;
+    text-decoration: underline;
+}
+
+/* =========================================================
+   ERRORES DEL FORMULARIO
+   ========================================================= */
+
+/* Contenedor general de los errores generados por Django. */
+.auth-card .errorlist {
+    margin: 0 0 18px 0;
+    padding: 10px 12px;
+    list-style: none;
+    border: 1px solid #fd3243;
+    border-radius: 6px;
+    background-color: #3a2024;
+    color: #ff8b94;
+    font-size: 14px;
+}
+
+/* Eliminamos el margen predeterminado de cada error. */
+.auth-card .errorlist li {
+    margin: 0;
+}
+
+/* =========================================================
+   AYUDA DE LOS CAMPOS
+   ========================================================= */
+
+/* Texto de ayuda generado por Django. */
+.auth-card .helptext {
+    color: #8f8f8f;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Separación cuando el texto de ayuda aparece debajo de un campo. */
+.auth-card span.helptext {
+    display: block;
+    margin-top: 6px;
+}
+
+/* Lista de requisitos de contraseña generada por Django. */
+.auth-card form > ul {
+    margin: 6px 0 18px 0;
+    padding-left: 20px;
+    color: #8f8f8f;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Elementos individuales de los requisitos. */
+.auth-card form > ul li {
+    margin-bottom: 3px;
+}
+
+/* =========================================================
+   DESCRIPCIÓN DE AUTENTICACIÓN
+   ========================================================= */
+
+/* Texto descriptivo utilizado en las pantallas de autenticación. */
+.auth-description {
+    margin: 0 0 25px 0;
+    color: #c7c7c7;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   ESTADO DE ERROR
+   ========================================================= */
+
+/* Mensaje mostrado cuando un enlace de recuperación
+   ya no es válido. */
+.auth-error {
+    padding: 14px;
+    border: 1px solid #fd3243;
+    border-radius: 8px;
+    background-color: #3a2024;
+    color: #ff8b94;
+    text-align: center;
+}
+
+/* Evitamos márgenes innecesarios en el mensaje. */
+.auth-error p {
+    margin: 0;
+}

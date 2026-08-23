@@ -15,6 +15,10 @@ from django.utils import timezone
 
 # View encargada de registrar un nuevo usuario.
 def register(request):
+    
+    # Si el usuario ya está autenticado, lo enviamos directamente a sus tareas.
+    if request.user.is_authenticated:
+        return redirect("tasks:task_list")
 
     # Comprobamos si el usuario envió el formulario.
     if request.method == "POST":

@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tasks/css/auth.css' %}">
+{% endblock extra_css %}
 
 {% block title %}
     Crear cuenta
@@ -7,27 +12,39 @@
     
 
 {% block content %}
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Crear cuenta</h1>
     
-    <h1>Crear cuenta</h1>
-    
-    <form method="POST">
+        <form method="POST">
 
-        {% csrf_token %}
-        
-        {{ form.as_p }}
+            {% csrf_token %}
+            
+            {{ form.as_p }}
 
-        <button type="submit">
-            Registrarse
-        </button>
+            <button type="submit">
+                Registrarse
+            </button>
 
-    </form>
+        </form>
 
-    <p>
-        ¿Ya tienes una cuenta?
-        <a href="{% url 'login' %}">
-            Iniciar sesión
-        </a>
-    </p>
+        <div class="auth-links">
+
+            <p>
+                ¿Ya tienes una cuenta?
+                <a href="{% url 'login' %}">
+                    Iniciar sesión
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock content %}
     

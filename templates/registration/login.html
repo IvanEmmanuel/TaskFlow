@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tasks/css/auth.css' %}">
+{% endblock extra_css %}
+
 
 {% block title %}
     Iniciar Sesión
@@ -7,30 +13,46 @@
 
 
 {% block content %}
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <h1>Iniciar Sesión</h1>
+        
+            <form method="POST">
+                
+                {% csrf_token %}
+        
+                {{ form.as_p }}
+        
+                <button type="submit">
+                    Iniciar Sesión
+                </button>
+
+            </form>
+
+            <div class="auth-links">
+
+                <p>
+                    ¿No tienes una cuenta?
+                    <a href="{% url 'register' %}">
+                        Crear una cuenta
+                    </a>
+                </p>
+        
+                <p>
+                    <a href="{% url 'password_reset' %}">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </p>
+
+            </div>
+            
+        </div>
+
+    </div>
     
-    <h1>Iniciar Sesión</h1>
-
-    <form method="POST">
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <button type="submit">
-            Iniciar Sesión
-        </button>
-        <p>
-            ¿No tienes una cuenta?
-            <a href="{% url 'register' %}">
-                Crear una cuenta
-            </a>
-        </p>
-
-        <p>
-            <a href="{% url 'password_reset' %}">
-                ¿Olvidaste tu contraseña?
-            </a>
-        </p>
-    </form>
     
 {% endblock content %}
     

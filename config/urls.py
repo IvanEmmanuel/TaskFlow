@@ -23,7 +23,14 @@ from apps.tasks import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("tasks/", include("apps.tasks.urls")),
-    path("login/", auth_views.LoginView.as_view(), name="login"),
+    
+    path("login/", auth_views.LoginView.as_view(redirect_authenticated_user=True), name="login"), 
+                                    # ¿Qué hace redirect_authenticated_user=True?
+    # Si el usuario ya está autenticado y trata de entrar a /login/, 
+    # no le muestres el formulario de login; redirígelo directamente al destino de usuarios autenticados.
+    # en settings.py -> LOGIN_REDIRECT_URL = "/tasks/"
+    
+    
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("register/", views.register, name="register"),
     path("password-reset/", auth_views.PasswordResetView.as_view(
