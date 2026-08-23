@@ -198,7 +198,7 @@ class TaskViewTest(TestCase):
             404
         )
         
-    def test_user_cannot_delete_other_users_task(self):
+    def test_user_cannot_access_other_users_task_delete(self):
         other_user = User.objects.create_user(
             username="Carlos",
             password="123456"
@@ -303,4 +303,227 @@ class TaskViewTest(TestCase):
             Task.objects.filter(
                 id=other_task.id
             ).exists()
+        )
+        
+    def test_task_search_filter(self):
+        Task.objects.create(
+            title="Estudiar Django",
+            description="Repasar CBV",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        Task.objects.create(
+            title="Comprar comida",
+            description="Ir al supermercado",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="LOW",
+            user=self.user
+        )
+
+        self.client.login(
+            username="Ivan",
+            password="123456"
+        )
+
+        response = self.client.get(
+            "/tasks/?search=Django"
+        )
+
+        self.assertContains(
+            response,
+            "Estudiar Django"
+        )
+
+        self.assertNotContains(
+            response,
+            "Comprar comida"
+        )
+        
+    def test_task_status_filter(self):
+        Task.objects.create(
+            title="Tarea pendiente",
+            description="Pendiente",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        Task.objects.create(
+            title="Tarea completada",
+            description="Terminada",
+            due_date="2026-08-30",
+            status="COMPLETED",
+            priority="LOW",
+            user=self.user
+        )
+
+        self.client.login(
+            username="Ivan",
+            password="123456"
+        )
+
+        response = self.client.get(
+            "/tasks/?status=COMPLETED"
+        )
+
+        self.assertContains(
+            response,
+            "Tarea completada"
+        )
+
+        self.assertNotContains(
+            response,
+            "Tarea pendiente"
+        )
+        
+    def test_task_priority_filter(self):
+        Task.objects.create(
+            title="Tarea urgente",
+            description="Prioridad alta",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        Task.objects.create(
+            title="Tarea normal",
+            description="Prioridad baja",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="LOW",
+            user=self.user
+        )
+
+        self.client.login(
+            username="Ivan",
+            password="123456"
+        )
+
+        response = self.client.get(
+            "/tasks/?priority=HIGH"
+        )
+
+        self.assertContains(
+            response,
+            "Tarea urgente"
+        )
+
+        self.assertNotContains(
+            response,
+            "Tarea normal"
+        )
+        
+    def test_task_order_newest(self):
+        first_task = Task.objects.create(
+            title="Tarea antigua",
+            description="Primera tarea",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        second_task = Task.objects.create(
+            title="Tarea reciente",
+            description="Segunda tarea",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="LOW",
+            user=self.user
+        )
+
+        self.client.login(
+            username="Ivan",
+            password="123456"
+        )
+
+        response = self.client.get(
+            "/tasks/?order=newest"
+        )
+
+        tasks = list(response.context["tasks"])
+
+        self.assertEqual(
+            tasks[0],
+            second_task
+        )
+
+        self.assertEqual(
+            tasks[1],
+            first_task
+        )
+        
+    def test_task_statistics(self):
+        Task.objects.create(
+            title="Tarea pendiente",
+            description="Pendiente",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        Task.objects.create(
+            title="Tarea en progreso",
+            description="En progreso",
+            due_date="2026-08-30",
+            status="IN_PROGRESS",
+            priority="MEDIUM",
+            user=self.user
+        )
+
+        Task.objects.create(
+            title="Tarea completada",
+            description="Completada",
+            due_date="2026-08-30",
+            status="COMPLETED",
+            priority="LOW",
+            user=self.user
+        )
+
+        Task.objects.create(
+            title="Tarea vencida",
+            description="Vencida",
+            due_date="2026-08-20",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        self.client.login(
+            username="Ivan",
+            password="123456"
+        )
+
+        response = self.client.get("/tasks/")
+
+        self.assertEqual(
+            response.context["total_tasks"],
+            4
+        )
+
+        self.assertEqual(
+            response.context["pending_tasks"],
+            2
+        )
+
+        self.assertEqual(
+            response.context["in_progress_tasks"],
+            1
+        )
+
+        self.assertEqual(
+            response.context["completed_tasks"],
+            1
+        )
+
+        self.assertEqual(
+            response.context["overdue_tasks"],
+            1
         )

@@ -64,26 +64,30 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
     context_object_name = "tasks"                   # Proporciona un nombre basado en el modelo
     paginate_by = 5                                 # Mostrar máximo 5 tareas por página.
     
+    # Conjunto de estados válidos que el usuario puede utilizar como filtro.
+    # Evita aceptar valores de estado que no estén contemplados por la aplicación. ->  /tasks/?status=HACK
     VALID_STATUSES = {
         "PENDING",
         "IN_PROGRESS",
         "COMPLETED",
     }
 
+    # Conjunto de prioridades válidas que el usuario puede utilizar como filtro.
+    # Se utiliza para validar el parámetro "priority" recibido desde la URL.
     VALID_PRIORITIES = {
         "LOW",
         "MEDIUM",
         "HIGH",
     }
 
+    # Conjunto de opciones válidas para ordenar las tareas.
+    # Define los valores que puede recibir el parámetro "order" desde la URL.
     VALID_ORDERS = {
         "due_asc",
         "due_desc",
         "newest",
         "oldest",
     }
-    
-    
     
     
     def get_queryset(self): # se encarga de determinar qué tareas aparecen en la lista.
@@ -96,9 +100,6 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
         # Aquí estamos conservando nuestra regla de autorización, solo trae los registros del usuario autenticado.
 
         return self.apply_filters(queryset)  # Enviamos el QuerySet(queryset) a apply_filters() para aplicar los filtros y devolver el resultado final.
-
-
-
 
 
     def get_context_data(self, **kwargs): # se encarga de agregar información adicional que queremos enviar al template.
@@ -135,9 +136,6 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
         ).count()
         
         return context                                      # Devolvemos el contexto para que esté disponible en task_list.html.
-    
-    
-    
     
 
     def apply_filters(self, queryset):                  # Aquí recibimos: queryset, que ya contiene únicamente las tareas del usuario autenticado.
@@ -185,10 +183,6 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
 
 
         return queryset                                 # Devolvemos el QuerySet final después de aplicar los filtros y el ordenamiento.
- 
- 
- 
- 
  
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
@@ -263,113 +257,3 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):   # Exige que el usuario e
         )
         
         return super().form_valid(form)                 # Continúa con el comportamiento normal de DeleteView y elimina la tarea.
-
-
-
-
-##############################################################
-#                Antiguas FBV(Function Base Views)
-##############################################################
-# Existen estas dos formas de hacerlo pero la mas recomendada es CBV
-
-#FBV	                |         CBV
-#@login_required	        LoginRequiredMixin
-#render()	                comportamiento de Generic View
-#get_object_or_404()	    DetailView / UpdateView / DeleteView
-#request.user	            self.request.user
-#form.is_valid()	        form_valid()
-#redirect()	                success_url
-#consulta filtrada	        get_queryset()
-
-
-@login_required
-def task_list(request):    # -> function base view antiguo, ahora usaremos TaskListView
-    # tasks = Task.objects.all()    ->     obtiene todas las tareas de todos los usuarios
-    tasks = Task.objects.filter(user=request.user)  # obtiene solo las tareas de el usuario autenticado
-    
-    
-    return render(
-        request, 
-        "tasks/task_list.html",
-        {"tasks": tasks}
-    )
-
-@login_required 
-def task_detail(request, id):
-    # task = get_object_or_404(Task, id=id)   ->  obtenia la informacion de una tarea, osea los detalles
-    task = get_object_or_404(Task, id=id, user=request.user) #  obtiene la tarea seleccionada de ese usuario autenticado que le pertenesca
-        
-    return render(
-        request,
-        "tasks/task_detail.html",
-        {"task": task}
-    )
-
-@login_required    
-def task_create(request):
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        
-        if form.is_valid():
-            task = form.save(commit=False) # detiene el guardado a la bd y lo guarda en memoria
-            task.user = request.user # asigna el usuario quie creo la tarea
-            form.save() # guarda en bd
-            
-            messages.success( # importamos la libreria messages y enviamos un mensage de confirmacion al template
-                request,
-                "Tarea creada correctamente."
-            )
-            
-            return redirect("tasks:task_list")
-    else:
-        form = TaskForm()
-        
-    return render(
-        request,
-        "tasks/task_form.html",
-        {"form": form}
-    )
-
-@login_required    
-def task_edit(request, id):
-    task = get_object_or_404(Task, id=id, user=request.user)  #  obtiene la tarea seleccionada de ese usuario autenticado que le pertenesca
-    
-    if request.method == "POST":
-        form = TaskForm(request.POST, instance=task)
-        
-        if form.is_valid():
-            form.save()
-            
-            messages.success(
-                request,
-                "Tarea actualizada correctamente.",
-            )
-            return redirect("tasks:task_detail", id=task.id)
-        
-    else:
-        form = TaskForm(instance=task)
-        
-    return render(
-        request,
-        "tasks/task_form.html",
-        {"form":form}
-    )
-
-@login_required
-def task_delete(request, id):
-    task = get_object_or_404(Task, id=id, user=request.user) #  obtiene la tarea seleccionada de ese usuario autenticado que le pertenesca
-    
-    if request.method == "POST":
-        task.delete()
-        
-        messages.success(
-            request,
-            "Tarea eliminada correctamente."
-        )
-        return redirect("tasks:task_list")
-    
-    return render(
-        request,
-        "tasks/task_confirm_delete.html",
-        {"task":task}
-    )
