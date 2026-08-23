@@ -8,7 +8,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth import login
-from django.utils import timezone  
+from django.utils import timezone
+from rest_framework.views import APIView
+from .serializers import TaskSerializer
+from rest_framework.response import Response
+from rest_framework import status
 
 # Create your views here.
 
@@ -257,3 +261,51 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):   # Exige que el usuario e
         )
         
         return super().form_valid(form)                 # Continúa con el comportamiento normal de DeleteView y elimina la tarea.
+    
+
+
+class TaskListCreateAPIView(APIView):
+    
+    def get(self, request):
+        query_set = Task.objects.all().order_by("created_at")
+        serializer = TaskSerializer(query_set, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class TaskRetrieveUpdateDeleteAPIView(APIView):
+    """ GET, PUT, PATCH, DELETE  """
+    
+    def get_object(self, pk):
+        return get_object_or_404(Task, pk=pk)
+    
+    def get(self, request, pk):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+    
+    def put(self, request, pk):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        task = self.get_object(pk)
+        task.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

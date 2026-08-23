@@ -53,4 +53,7 @@ urlpatterns = [
         ),
          name="password_reset_complete",
     ),
+    
+    
+    path("api/", include("apps.tasks.api.urls")),
 ]
