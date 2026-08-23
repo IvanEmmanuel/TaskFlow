@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tasks/css/task_list.css' %}">
+{% endblock extra_css %}
 
 {% block title %}
     Mis tareas
@@ -11,23 +16,38 @@
     <div class="task-list-header">
 
         <h2>Mis Tareas</h2>
-        
-        {% if object_list|length == 0 %}
-            <!-- object_list es proporcionado automáticamente por Django ListView y contiene el resultado de get_queryset(). -->
-            <!-- |length obtiene la cantidad de elementos que contiene object_list. -->
-            <p>No se encontraron tareas.</p>
 
-        {% elif object_list|length == 1 %}
-            <!-- Comprobamos si object_list contiene exactamente una tarea. -->
-            <p>1 tarea encontrada.</p>
-
-        {% else %}
-            <!-- Si hay más de una tarea, mostramos la cantidad de elementos que contiene object_list. -->
-            <p>{{ object_list|length }} tareas encontradas.</p>
-
-        {% endif %}
+        <div class="task-stats">
+    
+            <div class="stat-card stat-total">
+                <span class="stat-number">{{ total_tasks }}</span>
+                <span class="stat-label">Total</span>
+            </div>
+    
+            <div class="stat-card stat-pending">
+                <span class="stat-number">{{ pending_tasks }}</span>
+                <span class="stat-label">Pendientes</span>
+            </div>
+    
+            <div class="stat-card stat-progress">
+                <span class="stat-number">{{ in_progress_tasks }}</span>
+                <span class="stat-label">En progreso</span>
+            </div>
+    
+            <div class="stat-card stat-completed">
+                <span class="stat-number">{{ completed_tasks }}</span>
+                <span class="stat-label">Completadas</span>
+            </div>
+    
+            <div class="stat-card stat-overdue">
+                <span class="stat-number">{{ overdue_tasks }}</span>
+                <span class="stat-label">Vencidas</span>
+            </div>
+    
+        </div>
 
     </div>
+
 
     <form method="get" class="task-filters">
         <input type="text" name="search" placeholder="Buscar una tarea..." value="{{ request.GET.search }}"> 
@@ -64,6 +84,21 @@
             Limpiar Filtros
         </a>
     </form>
+
+    {% if object_list|length == 0 %}
+        <!-- object_list es proporcionado automáticamente por Django ListView y contiene el resultado de get_queryset(). -->
+        <!-- |length obtiene la cantidad de elementos que contiene object_list. -->
+        <p class="task-results-count">No se encontraron tareas.</p>
+
+    {% elif object_list|length == 1 %}
+        <!-- Comprobamos si object_list contiene exactamente una tarea. -->
+        <p class="task-results-count">1 tarea encontrada.</p>
+
+    {% else %}
+        <!-- Si hay más de una tarea, mostramos la cantidad de elementos que contiene object_list. -->
+        <p class="task-results-count">{{ object_list|length }} tareas encontradas en está página.</p>
+
+    {% endif %}
 
     
     {% for task in tasks %}

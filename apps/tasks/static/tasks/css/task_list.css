@@ -1,0 +1,415 @@
+/* =========================================================
+   CONTENIDO PRINCIPAL
+   ========================================================= */
+
+/* Organizamos el encabezado de la lista de tareas. */
+.task-list-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444444;
+}
+
+/* Estilos para el título de la lista de tareas. */
+.task-list-header h2 {
+    margin: 0 0 5px 0;
+    color: #f5f5f5;
+}
+
+/* Organizamos los controles del formulario de filtros. */
+.task-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+/* Estilos generales para los campos de los filtros. */
+.task-filters input,
+.task-filters select {
+    padding: 8px 10px;
+    border: 1px solid #555555;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    font-size: 14px;
+}
+
+/* Cambiamos el borde de los campos cuando reciben el foco. */
+.task-filters input:focus,
+.task-filters select:focus {
+    outline: none;
+    border-color: #8B5CF6;
+}
+
+/* Estilos para el botón de filtrado. */
+.task-filters button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #8B5CF6;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Cambiamos el color del botón cuando el usuario pasa el cursor sobre él. */
+.task-filters button:hover {
+    background-color: #A78BFA;
+}
+
+/* Estilos para el enlace que permite eliminar los filtros aplicados. */
+.task-filters a {
+    color: #A78BFA;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Cambiamos el estilo del enlace cuando el usuario pasa el cursor sobre él. */
+.task-filters a:hover {
+    color: #DCB0F2;
+    text-decoration: underline;
+}
+
+/* =========================================================
+   RESULTADOS DE LA LISTA
+   ========================================================= */
+
+/* Estilos para indicar la cantidad de tareas encontradas. */
+.task-results-count {
+    margin: 0 0 20px 0;
+    color: #bdbdbd;
+}
+
+/* =========================================================
+   TARJETAS DE TAREAS
+   ========================================================= */
+
+/* Estilos generales de cada tarea en la lista. */
+article {
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    padding: 18px;
+    margin: 0 auto 16px auto;
+    border: 1px solid #444444;
+    border-radius: 10px;
+    background-color: #252525;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Efecto visual al pasar el cursor sobre una tarjeta. */
+article:hover {
+    transform: translateY(-2px);
+    border-color: #8B5CF6;
+}
+
+/* Ajustamos el espaciado de la información de cada tarea. */
+article p {
+    margin: 7px 0;
+}
+
+
+/* =========================================================
+   TÍTULO DE LA TAREA
+   ========================================================= */
+
+/* Estilos para el título de cada tarea. */
+article h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+/* Estilos para el enlace que contiene el título de la tarea. */
+article h3 a {
+    color: #8B5CF6;
+    text-decoration: none;
+}
+
+/* Cambiamos el estilo del título cuando el usuario pasa el cursor sobre él. */
+article h3 a:hover {
+    color: #A78BFA;
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+
+/* Estilo base para el indicador visual del estado. */
+.task-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* Indicador visual para tareas pendientes. */
+.status-pending {
+    background-color: #dace33;
+    color: #585858;
+}
+
+/* Indicador visual para tareas en progreso. */
+.status-in_progress {
+    background-color: #4bc3cc;
+    color: #f7f7f7;
+}
+
+/* Indicador visual para tareas completadas. */
+.status-completed {
+    background-color: #8ac265;
+    color: #585858;
+}
+
+
+/* =========================================================
+   PRIORIDAD
+   ========================================================= */
+
+/* Estilo base para el indicador visual de prioridad. */
+.task-priority {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* Indicador visual para prioridad alta. */
+.priority-high {
+    background-color: #ff6b77;
+    color: #f7f7f7;
+}
+
+/* Indicador visual para prioridad media. */
+.priority-medium {
+    background-color: #FF9F43;
+    color: #585858;
+}
+
+/* Indicador visual para prioridad baja. */
+.priority-low {
+    background-color: #A78BFA;
+    color: #f7f7f7;
+}
+
+
+/* =========================================================
+   FECHA LÍMITE
+   ========================================================= */
+
+/* Destacamos ligeramente la fecha límite. */
+.task-due-date {
+    margin-top: 12px;
+    color: #c7c7c7;
+    font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   TAREAS VENCIDAS
+   ========================================================= */
+
+/* Indicador visual para tareas que ya están vencidas. */
+.task-overdue {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 12px;
+    background-color: #fd3243;
+    color: #f7f7f7;
+    font-weight: 600;
+}
+
+/* =========================================================
+   PAGINACIÓN
+   ========================================================= */
+
+/* Organizamos los controles de paginación horizontalmente. */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    padding: 10px 0;
+}
+
+/* Estilos generales para los enlaces de paginación. */
+.pagination a,
+.pagination strong {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Estilo para las páginas que no están seleccionadas. */
+.pagination a {
+    color: #A78BFA;
+    background-color: #252525;
+    border: 1px solid #444444;
+}
+
+/* Cambiamos el aspecto de una página cuando el usuario pasa el cursor. */
+.pagination a:hover {
+    background-color: #8B5CF6;
+    color: #ffffff;
+    border-color: #8B5CF6;
+}
+
+/* Indicamos visualmente cuál es la página actual. */
+.pagination strong {
+    background-color: #8B5CF6;
+    color: #ffffff;
+    border: 1px solid #8B5CF6;
+}
+
+
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
+
+/* Contenedor mostrado cuando el usuario no tiene tareas. */
+.empty-state {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #444444;
+    border-radius: 10px;
+    background-color: #252525;
+}
+
+/* Título del estado vacío. */
+.empty-state h3 {
+    margin-top: 0;
+    color: #f5f5f5;
+}
+
+/* Texto descriptivo del estado vacío. */
+.empty-state p {
+    color: #bdbdbd;
+}
+
+/* Enlace para crear una nueva tarea. */
+.empty-state a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background-color: #8B5CF6;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Efecto al pasar el cursor sobre el enlace. */
+.empty-state a:hover {
+    background-color: #A78BFA;
+}
+
+/* =========================================================
+   ESTADÍSTICAS
+   ========================================================= */
+
+/* Organizamos las tarjetas de estadísticas horizontalmente. */
+.task-stats {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+/* Estilo base de cada tarjeta de estadística. */
+.stat-card {
+    flex: 1;
+    padding: 16px;
+    border: 1px solid #444444;
+    border-radius: 10px;
+    background-color: #252525;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+/* Elevamos ligeramente la tarjeta al pasar el cursor. */
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Número principal de la estadística. */
+.stat-number {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Nombre de la estadística. */
+.stat-label {
+    display: block;
+    margin-top: 8px;
+    color: #c7c7c7;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Tarjeta para el total de tareas. */
+.stat-total {
+    border-color: #8B5CF6;
+}
+
+/* Tarjeta para tareas pendientes. */
+.stat-pending {
+    border-color: #dace33;
+}
+
+/* Tarjeta para tareas en progreso. */
+.stat-progress {
+    border-color: #4bc3cc;
+}
+
+/* Tarjeta para tareas completadas. */
+.stat-completed {
+    border-color: #8ac265;
+}
+
+/* Tarjeta para tareas vencidas. */
+.stat-overdue {
+    border-color: #fd3243;
+}
+
+/* =========================================================
+   RESPONSIVE - ESTADÍSTICAS
+   ========================================================= */
+
+/* Ajustamos las tarjetas para pantallas medianas. */
+@media (max-width: 900px) {
+
+    .task-stats {
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex: 1 1 calc(33.333% - 12px);
+    }
+
+}
+
+/* Ajustamos las tarjetas para pantallas pequeñas. */
+@media (max-width: 600px) {
+
+    .task-stats {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        width: 100%;
+    }
+
+}

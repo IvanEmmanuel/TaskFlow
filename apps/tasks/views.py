@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth import login
+from django.utils import timezone  
 
 # Create your views here.
 
@@ -78,7 +79,10 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
         "oldest",
     }
     
-    def get_queryset(self):
+    
+    
+    
+    def get_queryset(self): # se encarga de determinar qué tareas aparecen en la lista.
 
         # Primero obtenemos únicamente las tareas del usuario autenticado y se las asignamos a queryset.
         queryset = Task.objects.filter(
@@ -89,6 +93,48 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
 
         return self.apply_filters(queryset)  # Enviamos el QuerySet(queryset) a apply_filters() para aplicar los filtros y devolver el resultado final.
 
+
+
+
+
+    def get_context_data(self, **kwargs): # se encarga de agregar información adicional que queremos enviar al template.
+        
+        context =super().get_context_data(**kwargs)     # Obtenemos el contexto que Django prepara normalmente para el template.
+
+        # Obtenemos todas las tareas del usuario autenticado,
+        # sin aplicar los filtros de búsqueda, estado, prioridad u ordenamiento.
+        user_tasks = Task.objects.filter(
+            user=self.request.user
+        )
+        
+        context["total_tasks"] = user_tasks.count()         # Contamos todas las tareas pertenecientes al usuario.
+        
+        context["pending_tasks"] = user_tasks.filter(       # Contamos únicamente las tareas que están pendientes.
+            status="PENDING"
+        ).count()
+        
+        context["in_progress_tasks"] = user_tasks.filter(   # Contamos las tareas que están actualmente en progreso.
+            status="IN_PROGRESS"
+        ).count()
+        
+        context["completed_tasks"] = user_tasks.filter(     # Contamos las tareas que ya fueron completadas.
+            status="COMPLETED"
+        ).count()
+        
+        # Contamos las tareas vencidas.
+        # Una tarea se considera vencida cuando su fecha límite ya pasó
+        # y todavía no está completada.
+        context["overdue_tasks"] = user_tasks.filter(
+            due_date__lt=timezone.now().date(),
+        ).exclude(
+            status="COMPLETED"
+        ).count()
+        
+        return context                                      # Devolvemos el contexto para que esté disponible en task_list.html.
+    
+    
+    
+    
 
     def apply_filters(self, queryset):                  # Aquí recibimos: queryset, que ya contiene únicamente las tareas del usuario autenticado.
 
@@ -135,6 +181,10 @@ class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases p
 
 
         return queryset                                 # Devolvemos el QuerySet final después de aplicar los filtros y el ordenamiento.
+ 
+ 
+ 
+ 
  
 
 class TaskDetailView(LoginRequiredMixin, DetailView):
