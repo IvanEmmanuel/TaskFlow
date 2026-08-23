@@ -3,6 +3,12 @@ from .models import Task
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
+# UserCreationForm es un formulario de Django diseñado
+# específicamente para crear usuarios y validar sus contraseñas.
+from django.contrib.auth.forms import UserCreationForm
+
+# User es el modelo de usuario que proporciona Django.
+from django.contrib.auth.models import User
 
 class TaskForm(forms.ModelForm):
     
@@ -95,3 +101,21 @@ class TaskForm(forms.ModelForm):
                 }
             ),
         }
+        
+# Nuestro formulario personalizado para registrar usuarios.
+# Hereda de UserCreationForm para reutilizar sus validaciones
+# y agregar el campo email.
+class RegisterForm(UserCreationForm):
+
+    class Meta:
+
+        # Indicamos que el formulario trabajará con el modelo User.
+        model = User
+
+        # Campos que aparecerán en el formulario de registro.
+        fields = [
+            "username",
+            "email",
+            "password1",
+            "password2",
+        ]

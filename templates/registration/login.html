@@ -18,6 +18,18 @@
         <button type="submit">
             Iniciar Sesión
         </button>
+        <p>
+            ¿No tienes una cuenta?
+            <a href="{% url 'register' %}">
+                Crear una cuenta
+            </a>
+        </p>
+
+        <p>
+            <a href="{% url 'password_reset' %}">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </p>
     </form>
     
 {% endblock content %}

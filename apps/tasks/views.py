@@ -1,14 +1,56 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Task
-from .forms import TaskForm
+from .forms import TaskForm, RegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth import login
 
 # Create your views here.
+
+
+# View encargada de registrar un nuevo usuario.
+def register(request):
+
+    # Comprobamos si el usuario envió el formulario.
+    if request.method == "POST":
+
+        # RegisterForm es nuestro formulario personalizado.(revisar forms.py)
+        # Hereda de UserCreationForm de Django y agrega el campo email.
+        # request.POST contiene los datos enviados por el usuario.
+        form = RegisterForm(request.POST)
+
+        # Ejecutamos las validaciones definidas por RegisterForm, es decir que todo venga bien
+        # y por su clase padre UserCreationForm.
+        if form.is_valid():
+
+            # Guarda el nuevo usuario en la base de datos
+            # y devuelve el objeto User creado.
+            user = form.save()
+
+            # Autentica automáticamente al usuario recién creado.
+            # Así no tiene que iniciar sesión manualmente después del registro.
+            login(request, user)
+
+            # Redirige al usuario a la lista de tareas después
+            # de completar correctamente el registro.
+            return redirect("tasks:task_list")
+
+    else:
+
+        # Si la petición es GET, creamos un formulario vacío
+        # para mostrarlo al usuario.
+        form = RegisterForm()
+
+    # Renderiza el template de registro y le envía el formulario.
+    return render(
+        request,
+        "registration/register.html",
+        {"form": form}
+    )
 
 class TaskListView(LoginRequiredMixin, ListView):   # heredamos de las c lases padres LoginRequiredMixin, ListView
                                                     # LoginRequiredMixin hace lo que anteriormente hacíamos con: @login_required
@@ -167,7 +209,6 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):   # Exige que el usuario e
         )
         
         return super().form_valid(form)                 # Continúa con el comportamiento normal de DeleteView y elimina la tarea.
-
 
 
 
