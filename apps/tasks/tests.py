@@ -1,5 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
+from apps.tasks.forms import TaskForm, RegisterForm
+from django.utils import timezone  
 
 from apps.tasks.models import Task
 
@@ -526,4 +528,129 @@ class TaskViewTest(TestCase):
         self.assertEqual(
             response.context["overdue_tasks"],
             1
+        )
+        
+    def test_task_priority_label(self):
+        task = Task.objects.create(
+            title="Tarea importante",
+            description="Tarea de prueba",
+            due_date="2026-08-30",
+            status="PENDING",
+            priority="HIGH",
+            user=self.user
+        )
+
+        self.assertEqual(
+            task.priority_label,
+            "Prioridad alta: esta tarea requiere atención."
+        )
+        
+    def test_task_status_message(self):
+        task = Task.objects.create(
+            title="Tarea en progreso",
+            description="Tarea de prueba",
+            due_date="2026-08-30",
+            status="IN_PROGRESS",
+            priority="MEDIUM",
+            user=self.user
+        )
+
+        self.assertEqual(
+            task.status_message,
+            "Esta tarea está en progreso."
+        )
+        
+    def test_due_date_cannot_be_in_the_past(self):
+        form = TaskForm(
+            data={
+                "title": "Tarea vencida",
+                "description": "Tarea de prueba",
+                "due_date": "2026-08-20",
+                "status": "PENDING",
+                "priority": "HIGH",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            "due_date",
+            form.errors
+        )
+        
+    def test_high_priority_task_cannot_have_due_date_over_30_days(self):
+        form = TaskForm(
+            data={
+                "title": "Tarea urgente",
+                "description": "Tarea de prueba",
+                "due_date": "2026-10-01",
+                "status": "PENDING",
+                "priority": "HIGH",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            "due_date",
+            form.errors
+        )
+        
+    def test_high_priority_task_with_valid_due_date(self):
+        form = TaskForm(
+            data={
+                "title": "Tarea urgente",
+                "description": "Tarea de prueba",
+                "due_date": "2026-08-30",
+                "status": "PENDING",
+                "priority": "HIGH",
+            }
+        )
+
+        self.assertTrue(form.is_valid())
+        
+    def test_valid_registration_form(self):
+        form = RegisterForm(
+            data={
+                "username": "Carlos",
+                "email": "carlos@example.com",
+                "password1": "DjangoTest123!",
+                "password2": "DjangoTest123!",
+            }
+        )
+
+        self.assertTrue(form.is_valid())
+        
+    def test_registration_form_rejects_different_passwords(self):
+        form = RegisterForm(
+            data={
+                "username": "Carlos",
+                "email": "carlos@example.com",
+                "password1": "DjangoTest123!",
+                "password2": "DjangoTest456!",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            "password2",
+            form.errors
+        )
+        
+    def test_registration_form_rejects_invalid_password(self):
+        form = RegisterForm(
+            data={
+                "username": "Carlos",
+                "email": "carlos@example.com",
+                "password1": "123",
+                "password2": "123",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+
+        self.assertIn(
+            "password2",
+            form.errors
         )
