@@ -413,3 +413,25 @@ article h3 a:hover {
     }
 
 }
+
+/* =========================================================
+   RESPONSIVE - FILTROS
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .task-filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .task-filters input,
+    .task-filters select,
+    .task-filters button,
+    .task-filters a {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+}
