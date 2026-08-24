@@ -141,3 +141,14 @@ LOGIN_URL = "/login/"                    # URL a la que se envía al usuario si 
 LOGIN_REDIRECT_URL = "/tasks/"           # URL a la que se envía después de iniciar sesión correctamente
 
 LOGOUT_REDIRECT_URL = "/login/"          # URL a la que se envía después de cerrar sesión
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES":(
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 5
+}
