@@ -35,7 +35,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Aplicación principal de TaskFlow.
+    # Contiene nuestro modelo Task, vistas, serializers,
+    # permisos y API.
     "apps.tasks",
+
+    # Django REST Framework.
+    # Proporciona las herramientas necesarias para construir
+    # nuestra API REST.
     "rest_framework",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -112,9 +119,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+# Idioma predeterminado de la aplicación.
+LANGUAGE_CODE = "es-mx"
 
-TIME_ZONE = "UTC"
+# Zona horaria utilizada por Django para manejar fechas y horas.
+TIME_ZONE = "America/Mexico_City"
 
 USE_I18N = True
 
@@ -143,12 +152,32 @@ LOGIN_REDIRECT_URL = "/tasks/"           # URL a la que se envía después de in
 LOGOUT_REDIRECT_URL = "/login/"          # URL a la que se envía después de cerrar sesión
 
 REST_FRAMEWORK = {
+
+    # Define cómo DRF identifica al usuario que realiza una petición.
+    # En este proyecto utilizamos JWT para autenticar las peticiones
+    # mediante un access token enviado en el header Authorization.
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES":(
+
+    # Establece el permiso que tendrán por defecto todas las vistas
+    # de Django REST Framework.
+    #
+    # IsAuthenticated significa que, por defecto, una petición debe
+    # pertenecer a un usuario autenticado para poder acceder a la API.
+    #
+    # Las vistas que necesiten ser públicas pueden sobrescribir esta
+    # configuración utilizando permisos como AllowAny.
+    "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 5
+
+    # Indica la clase de paginación que utilizará DRF para dividir
+    # los resultados de las consultas en diferentes páginas.
+    "DEFAULT_PAGINATION_CLASS": (
+        "rest_framework.pagination.PageNumberPagination"
+    ),
+
+    # Define cuántos objetos se mostrarán como máximo en cada página.
+    "PAGE_SIZE": 5,   # Número máximo de objetos por página.
 }

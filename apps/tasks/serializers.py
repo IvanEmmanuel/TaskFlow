@@ -15,6 +15,10 @@ class TaskSerializer(serializers.ModelSerializer):
     desde una petición de la API antes de crear o modificar
     objetos Task.
     """
+    # El usuario se muestra mediante su username,
+    # pero no puede ser enviado o modificado directamente
+    # por el cliente. El ViewSet asigna el usuario autenticado
+    # al crear una tarea.
     user = serializers.ReadOnlyField(source="user.username")
     class Meta:
         # Indicamos que este serializer está relacionado
@@ -45,7 +49,9 @@ class TaskSerializer(serializers.ModelSerializer):
             "user",
         ]
         
-class RegisterSeralizer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
+    # La contraseña puede recibirse durante el registro,
+    # pero nunca debe incluirse en las respuestas de la API.
     password = serializers.CharField(write_only=True, min_length=8)
     
     class Meta:

@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.utils import timezone
 from rest_framework.views import APIView
-from .serializers import TaskSerializer, RegisterSeralizer
+from .serializers import TaskSerializer, RegisterSerializer
 from .permissions import IsUser
 from rest_framework.response import Response
 from rest_framework import status, viewsets, permissions
@@ -311,7 +311,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def register_api(request):
-    serializer = RegisterSeralizer(data=request.data)
+    serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
         return Response({"id": user.id, "username": user.username, "email": user.email},
