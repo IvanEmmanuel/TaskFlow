@@ -1,8 +1,6 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from .models import Task
 from .forms import TaskForm, RegisterForm
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -18,7 +16,6 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 
@@ -297,16 +294,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     ]
 
     def get_queryset(self):                                 # El ViewSet solamente puede trabajar con las Tasks pertenecientes al usuario autenticado.
-        queryset = Task.objects.filter(
+        return Task.objects.filter(
             user= self.request.user                         # Dame únicamente las tareas cuyo user sea el usuario que hizo la petición.
         )
-        
-        return self.apply_filters(queryset)                 # le mandamos los datos a la funcion para aplicar filtros
-    
-    
-    def apply_filters(self, queryset):                      # recibimos lod datos para aplicar filtros
-            
-        return queryset
         
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)             # No me importa qué usuario me mandó el cliente. El propietario será el usuario autenticado.
