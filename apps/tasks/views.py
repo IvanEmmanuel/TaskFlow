@@ -16,6 +16,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 
@@ -274,11 +275,72 @@ class TaskViewSet(viewsets.ModelViewSet):
     # queryset = Task.objects.all()                         # queryset Le dice al ViewSet: Este es el conjunto de objetos con el que voy a trabajar. (osea todas las tareas)
     serializer_class = TaskSerializer                       # Este es el serializer que voy a utilizar para representar y validar esos objetos.
     permission_classes = [IsAuthenticated]
+    VALID_STATUSES = {
+        "PENDING",
+        "IN_PROGRESS",
+        "COMPLETED",
+    }
+    VALID_PRIORITIES = {
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+    }
+    
+    VALID_ORDERINGS = {
+        "due_date",
+        "-due_date",
+        "created_at",
+        "-created_at",
+    }
 
     def get_queryset(self):                                 # El ViewSet solamente puede trabajar con las Tasks pertenecientes al usuario autenticado.
-        return Task.objects.filter(
+        queryset = Task.objects.filter(
             user= self.request.user                         # Dame únicamente las tareas cuyo user sea el usuario que hizo la petición.
         )
+        
+        return self.apply_filters(queryset)                 # le mandamos los datos a la funcion para aplicar filtros
+    
+    
+    def apply_filters(self, queryset):                      # recibimos lod datos para aplicar filtros
+        
+        status = self.request.query_params.get("status")    # recibimos por la ruta los parametros de estado es decir PENDING, IN_PROGRESS, COMPLETED
+        
+        if status:
+            if status not in self.VALID_STATUSES:
+                raise ValidationError(
+                    {"status": "Estado no valido."}
+                )
+            
+        priority = self.request.query_params.get("priority")
+        
+        if priority:
+            if priority not in self.VALID_PRIORITIES:
+                raise ValidationError(
+                    {"priority": "Prioridad no válida."}
+                )
+
+            queryset = queryset.filter(
+                priority=priority
+            )
+            
+        search = self.request.query_params.get("search")
+
+        if search:
+            queryset = queryset.filter(
+                title__icontains=search
+            )
+            
+        ordering = self.request.query_params.get("ordering")
+
+        if ordering:
+            if ordering not in self.VALID_ORDERINGS:
+                raise ValidationError(
+                    {"ordering": "Ordenamiento no válido."}
+                )
+
+            queryset = queryset.order_by(ordering)
+            
+        return queryset
         
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)             # No me importa qué usuario me mandó el cliente. El propietario será el usuario autenticado.
