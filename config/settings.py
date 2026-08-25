@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     # Django REST Framework.
     # Proporciona las herramientas necesarias para construir
     # nuestra API REST.
-    # "rest_framework",
+     "rest_framework",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
