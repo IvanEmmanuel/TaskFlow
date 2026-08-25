@@ -153,6 +153,6 @@ LOGOUT_REDIRECT_URL = "/login/"          # URL a la que se envía después de ce
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
