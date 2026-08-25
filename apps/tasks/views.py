@@ -9,11 +9,12 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.utils import timezone
-from rest_framework.views import APIView     #  es una clase de DRF que nos permite construir una vista basada en HTTP.
-from rest_framework.response import Response    #  es la respuesta que DRF devolverá al cliente.
-from .serializers import TaskSerializer         # importamos nuestro serializer
+from rest_framework.views import APIView                            #  es una clase de DRF que nos permite construir una vista basada en HTTP.
+from rest_framework.response import Response                        #  es la respuesta que DRF devolverá al cliente.
+from .serializers import TaskSerializer, RegisterSerializer         # importamos nuestro serializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 # Create your views here.
 
@@ -280,6 +281,29 @@ class TaskViewSet(viewsets.ModelViewSet):
         
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)             # No me importa qué usuario me mandó el cliente. El propietario será el usuario autenticado.
+        
+class RegisterAPIView(APIView):
+    permission_classes = []                                 # un registro debe poder hacerlo alguien que todavía NO tiene cuenta.
+    
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            user = serializer.save()
+            
+            return Response(
+                {
+                    "message": "Usuario registrado correctamente.",
+                    "username": user.username,
+                    "email": user.email,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+        
 
 
 class TaskListAPIView(APIView):                             # Estamos creando una vista para nuestra API.   Obtener las tareas y devolverlas.
