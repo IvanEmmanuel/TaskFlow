@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # nuestra API REST.
     "rest_framework",
     "django_filters",
+    "drf_spectacular",
     "rest_framework_simplejwt.token_blacklist",
     
     "django.contrib.admin",
@@ -163,6 +164,7 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 from datetime import timedelta

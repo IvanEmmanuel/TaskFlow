@@ -69,3 +69,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         
         return user
+    
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(
+        help_text="Refresh token que será invalidado."
+    )

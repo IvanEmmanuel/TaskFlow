@@ -9,13 +9,16 @@ from django.contrib.auth import login
 from django.utils import timezone
 from rest_framework.views import APIView                            #  es una clase de DRF que nos permite construir una vista basada en HTTP.
 from rest_framework.response import Response                        #  es la respuesta que DRF devolverá al cliente.
-from .serializers import TaskSerializer, RegisterSerializer         # importamos nuestro serializer
+from .filters import TaskFilter
+from .serializers import TaskSerializer, RegisterSerializer, LogoutSerializer         # importamos nuestro serializer
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import serializers
 
 # Create your views here.
 
@@ -272,12 +275,12 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):   # Exige que el usuario e
 
 class TaskViewSet(viewsets.ModelViewSet):
     # queryset = Task.objects.all()                         # queryset Le dice al ViewSet: Este es el conjunto de objetos con el que voy a trabajar. (osea todas las tareas)
+    queryset = Task.objects.none()
     serializer_class = TaskSerializer                       # Este es el serializer que voy a utilizar para representar y validar esos objetos.
     permission_classes = [IsAuthenticated]
-    filterset_fields = [
-        "status",
-        "priority",
-    ]
+    
+    filterset_class = TaskFilter
+    
     filter_backends = [
         DjangoFilterBackend,
         SearchFilter,
@@ -303,7 +306,8 @@ class TaskViewSet(viewsets.ModelViewSet):
         
 class RegisterAPIView(APIView):
     permission_classes = []                                 # un registro debe poder hacerlo alguien que todavía NO tiene cuenta.
-    
+    serializer_class = RegisterSerializer
+    @extend_schema(request=RegisterSerializer,)
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         
@@ -326,7 +330,11 @@ class RegisterAPIView(APIView):
 class LogoutAPIView(APIView):
     
     permission_classes = [IsAuthenticated]
+    serializer_class = LogoutSerializer
     
+    @extend_schema(
+        request=serializer_class,
+    )
     def post(self, request):
         refresh_token = request.data.get("refresh")
         
