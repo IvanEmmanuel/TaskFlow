@@ -48,7 +48,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Las contraseñas no coinciden."
             )
-        validate_password(attrs["password"])
+        validate_password(attrs["password"])                    # validación de contraseña ya utiliza los validadores configurados por Django.
         return attrs
     
     def validate_email(self, value):                            # DRF tiene validaciones específicas por campo.

@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     # Django REST Framework.
     # Proporciona las herramientas necesarias para construir
     # nuestra API REST.
-     "rest_framework",
+    "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -155,4 +157,13 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = { 
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),      # Después de esos 2 minutos, ese Access Token ya no debe permitir acceder a: /api/tasks/
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
