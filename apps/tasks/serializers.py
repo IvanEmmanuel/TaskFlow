@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Task
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 
 class TaskSerializer(serializers.ModelSerializer):  #  significa que estamos creando un serializer basado en un modelo Django.
     
@@ -47,7 +48,16 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Las contraseñas no coinciden."
             )
+        validate_password(attrs["password"])
         return attrs
+    
+    def validate_email(self, value):                            # DRF tiene validaciones específicas por campo.
+        if User.objects.filter(email__iexact=value).exists():   # Para que la comparación sea insensible a mayúsculas/minúsculas.
+            raise serializers.ValidationError(
+                "Este email ya esta registrado."
+            )
+            
+        return value
     
     def create(self, validated_data):                           # Aquí es donde vamos a convertir los datos validados en un objeto User.
         validated_data.pop("password_confirmation")             # la eliminamos porque no pertenece al modelo User, solo la usamos para confirmar
