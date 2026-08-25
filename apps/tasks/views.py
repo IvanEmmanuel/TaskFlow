@@ -13,6 +13,8 @@ from rest_framework.views import APIView                            #  es una cl
 from rest_framework.response import Response                        #  es la respuesta que DRF devolverá al cliente.
 from .serializers import TaskSerializer, RegisterSerializer         # importamos nuestro serializer
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -275,23 +277,24 @@ class TaskViewSet(viewsets.ModelViewSet):
     # queryset = Task.objects.all()                         # queryset Le dice al ViewSet: Este es el conjunto de objetos con el que voy a trabajar. (osea todas las tareas)
     serializer_class = TaskSerializer                       # Este es el serializer que voy a utilizar para representar y validar esos objetos.
     permission_classes = [IsAuthenticated]
-    VALID_STATUSES = {
-        "PENDING",
-        "IN_PROGRESS",
-        "COMPLETED",
-    }
-    VALID_PRIORITIES = {
-        "LOW",
-        "MEDIUM",
-        "HIGH",
-    }
+    filterset_fields = [
+        "status",
+        "priority",
+    ]
+    filter_backends = [
+        DjangoFilterBackend,
+        SearchFilter,
+        OrderingFilter,
+    ]
     
-    VALID_ORDERINGS = {
+    ordering_fields = [
         "due_date",
-        "-due_date",
         "created_at",
-        "-created_at",
-    }
+    ]
+
+    search_fields = [
+        "title",
+    ]
 
     def get_queryset(self):                                 # El ViewSet solamente puede trabajar con las Tasks pertenecientes al usuario autenticado.
         queryset = Task.objects.filter(
@@ -302,43 +305,6 @@ class TaskViewSet(viewsets.ModelViewSet):
     
     
     def apply_filters(self, queryset):                      # recibimos lod datos para aplicar filtros
-        
-        status = self.request.query_params.get("status")    # recibimos por la ruta los parametros de estado es decir PENDING, IN_PROGRESS, COMPLETED
-        
-        if status:
-            if status not in self.VALID_STATUSES:
-                raise ValidationError(
-                    {"status": "Estado no valido."}
-                )
-            
-        priority = self.request.query_params.get("priority")
-        
-        if priority:
-            if priority not in self.VALID_PRIORITIES:
-                raise ValidationError(
-                    {"priority": "Prioridad no válida."}
-                )
-
-            queryset = queryset.filter(
-                priority=priority
-            )
-            
-        search = self.request.query_params.get("search")
-
-        if search:
-            queryset = queryset.filter(
-                title__icontains=search
-            )
-            
-        ordering = self.request.query_params.get("ordering")
-
-        if ordering:
-            if ordering not in self.VALID_ORDERINGS:
-                raise ValidationError(
-                    {"ordering": "Ordenamiento no válido."}
-                )
-
-            queryset = queryset.order_by(ordering)
             
         return queryset
         

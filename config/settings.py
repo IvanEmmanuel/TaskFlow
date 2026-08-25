@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Proporciona las herramientas necesarias para construir
     # nuestra API REST.
     "rest_framework",
+    "django_filters",
     "rest_framework_simplejwt.token_blacklist",
     
     "django.contrib.admin",
@@ -159,6 +160,9 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+    ],
 }
 
 from datetime import timedelta
