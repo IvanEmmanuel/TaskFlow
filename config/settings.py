@@ -162,8 +162,8 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = { 
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),      # Después de esos 2 minutos, ese Access Token ya no debe permitir acceder a: /api/tasks/
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),      # Después de esos 15 minutos, ese Access Token ya no debe permitir acceder a: /api/tasks/
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
