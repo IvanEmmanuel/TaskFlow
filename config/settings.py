@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     # Django REST Framework.
     # Proporciona las herramientas necesarias para construir
     # nuestra API REST.
-    "rest_framework",
+    # "rest_framework",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -151,33 +151,3 @@ LOGIN_REDIRECT_URL = "/tasks/"           # URL a la que se envía después de in
 
 LOGOUT_REDIRECT_URL = "/login/"          # URL a la que se envía después de cerrar sesión
 
-REST_FRAMEWORK = {
-
-    # Define cómo DRF identifica al usuario que realiza una petición.
-    # En este proyecto utilizamos JWT para autenticar las peticiones
-    # mediante un access token enviado en el header Authorization.
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-
-    # Establece el permiso que tendrán por defecto todas las vistas
-    # de Django REST Framework.
-    #
-    # IsAuthenticated significa que, por defecto, una petición debe
-    # pertenecer a un usuario autenticado para poder acceder a la API.
-    #
-    # Las vistas que necesiten ser públicas pueden sobrescribir esta
-    # configuración utilizando permisos como AllowAny.
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
-
-    # Indica la clase de paginación que utilizará DRF para dividir
-    # los resultados de las consultas en diferentes páginas.
-    "DEFAULT_PAGINATION_CLASS": (
-        "rest_framework.pagination.PageNumberPagination"
-    ),
-
-    # Define cuántos objetos se mostrarán como máximo en cada página.
-    "PAGE_SIZE": 5,   # Número máximo de objetos por página.
-}

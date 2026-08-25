@@ -19,7 +19,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from apps.tasks import views
-from rest_framework_simplejwt.views import(TokenObtainPairView, TokenRefreshView)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -54,10 +53,4 @@ urlpatterns = [
         ),
          name="password_reset_complete",
     ),
-    
-    
-    path("api/", include("apps.tasks.api.urls")),
-    path("api/auth/register/", views.register_api, name="api_register"),
-    path("api/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
