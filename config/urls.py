@@ -58,5 +58,6 @@ urlpatterns = [
     ######          URLs de la API
     ###############################################
     
-    path("api/", include("apps.tasks.api.urls"))
+    path("api/", include("apps.tasks.api.urls")),
+    path("api-auth/", include("rest_framework.urls")),
 ]

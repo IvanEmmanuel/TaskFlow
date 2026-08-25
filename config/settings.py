@@ -151,3 +151,8 @@ LOGIN_REDIRECT_URL = "/tasks/"           # URL a la que se envía después de in
 
 LOGOUT_REDIRECT_URL = "/login/"          # URL a la que se envía después de cerrar sesión
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+}

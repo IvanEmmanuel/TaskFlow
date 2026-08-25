@@ -12,6 +12,8 @@ from django.utils import timezone
 from rest_framework.views import APIView     #  es una clase de DRF que nos permite construir una vista basada en HTTP.
 from rest_framework.response import Response    #  es la respuesta que DRF devolverá al cliente.
 from .serializers import TaskSerializer         # importamos nuestro serializer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -265,6 +267,20 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):   # Exige que el usuario e
 ###   -------------------------------------------------------------------------
 ###                        API
 ###   -------------------------------------------------------------------------
+
+class TaskViewSet(viewsets.ModelViewSet):
+    # queryset = Task.objects.all()                         # queryset Le dice al ViewSet: Este es el conjunto de objetos con el que voy a trabajar. (osea todas las tareas)
+    serializer_class = TaskSerializer                       # Este es el serializer que voy a utilizar para representar y validar esos objetos.
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):                                 # El ViewSet solamente puede trabajar con las Tasks pertenecientes al usuario autenticado.
+        return Task.objects.filter(
+            user= self.request.user                         # Dame únicamente las tareas cuyo user sea el usuario que hizo la petición.
+        )
+        
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)             # No me importa qué usuario me mandó el cliente. El propietario será el usuario autenticado.
+
 
 class TaskListAPIView(APIView):                             # Estamos creando una vista para nuestra API.   Obtener las tareas y devolverlas.
     
