@@ -299,7 +299,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     def get_queryset(self):                                 # El ViewSet solamente puede trabajar con las Tasks pertenecientes al usuario autenticado.
         return Task.objects.filter(
             user= self.request.user                         # Dame únicamente las tareas cuyo user sea el usuario que hizo la petición.
-        )
+        ).order_by("id")
         
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)             # No me importa qué usuario me mandó el cliente. El propietario será el usuario autenticado.
