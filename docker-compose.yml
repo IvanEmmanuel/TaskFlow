@@ -15,7 +15,7 @@ services:
         condition: service_healthy
     command: >
       sh -c "python manage.py migrate &&
-            gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2"
+            gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 1"
 
   db:
     image: mysql:8.4
