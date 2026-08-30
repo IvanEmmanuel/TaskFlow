@@ -4,12 +4,14 @@ services:
     build: .
     container_name: taskflow_web
     ports:
-      - "8000:8000"
+      - "8001:8000"
     env_file:
       - .env
     environment:
       DB_HOST: db
       DB_PORT: 3306
+    volumes:
+      - static_data:/app/staticfiles
     depends_on:
       db:
         condition: service_healthy
@@ -46,3 +48,4 @@ services:
 
 volumes:
   mysql_data:
+  static_data:
